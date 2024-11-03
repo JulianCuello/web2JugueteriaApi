@@ -8,7 +8,7 @@ $router= new Router();
 
 
 $router->agregarRuta('lista','GET','JugueteApiControlador','listaJuguetes');
-$router->agregarRuta('lista', 'POST', 'JugueteApiControlador', 'insertarJuguete');
+$router->agregarRuta('lista', 'POST', 'JugueteApiControlador', 'agregarJuguete');
 $router->agregarRuta('lista/:Id', 'PUT','JugueteApiControlador', 'modificarJugete');
 $router->agregarRuta('lista/:Id', 'GET','JugueteApiControlador', 'obtenerJuguetes');
 $router->agregarRuta('lista/:Id', 'DELETE', 'JugueteApiControlador', 'eliminarJuguete');
