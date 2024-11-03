@@ -49,7 +49,7 @@ class JugueteApiControlador extends ApiControlador{
        
          public function agregarJuguete(){
         
-        $juguete=$this->getData();//desarma el json y genera un objeto
+        $juguete=$this->obtenerDatos();//desarma el json y genera un objeto
 
         $nombreProducto=$juguete->nombreProducto;
         $precio=$juguete->precio;
@@ -70,7 +70,7 @@ class JugueteApiControlador extends ApiControlador{
         $id=$parametro[':Id'];
         $jugueteId=$this->modelo->obtenerJuguetePorId($id);
         if($jugueteId){
-        $juguete=$this->getData();
+        $juguete=$this->obtenerDatos();
 
         $id_juguete=$juguete->$id_juguete;
         $nombreProducto=$juguete->nombreProducto;

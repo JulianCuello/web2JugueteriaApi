@@ -40,7 +40,7 @@
             return $query->rowCount();
         }
     
-        function actualizarJuguete($id_juguete,$nombreProducto,$precio, $material, $codigo, $img){
+        function editarJuguete($id_juguete,$nombreProducto,$precio, $material, $codigo, $img){
             $query = $this->db->prepare('UPDATE juguete SET nombreProducto=?,precio=?,material=?,codigo=?,img=? WHERE id_marca=?');
             $query->execute([$id_juguete, $nombreProducto, $precio, $material, $codigo, $img]);
             return $query->rowCount();
