@@ -1,13 +1,13 @@
 <?php
 class Ruta {
     private $url;
-    private $verb;
-    private $controller;
-    private $method;
-    private $params;
+    private $verbo;
+    private $controlador;
+    private $metodo;
+    private $parametro;
     public function __construct($url, $verbo, $controlador, $metodo){
         $this->url = $url;
-        $this->verbo = $verb;
+        $this->verbo = $verbo;
         $this->controlador = $controlador;
         $this->metodo = $metodo;
         $this->parametro = [];
