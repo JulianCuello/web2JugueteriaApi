@@ -45,7 +45,7 @@ class JugueteApiControlador extends ApiControlador{
         }
     }
         public function eliminarJuguete ($parametro=[]){
-            if (!empty($parametro)){
+            iif (!empty($parametro) && is_numeric($parametro[':Id'])) { //valido parametros
                 $id=$parametro[':Id'];
                 $juguete=$this->modelo->borrarJuguete($id);
                 if($juguete){
@@ -79,9 +79,9 @@ class JugueteApiControlador extends ApiControlador{
 
         $id=$this->modelo->insertarJuguete($nombreProducto,$precio,$material,$id_marca,$codigo,$img);
         if($id){
-            $this->view->response("Item ingresado con exito id N°: $id",201);
+            $this->vista->response("juguete ingresado con exito id N°: $id",201);
         }else{
-            $this->view->response("el item no pudo ser ingresado",404);
+            $this->vista->response("el juguete no pudo ser ingresado",404);
         }
         $nombreProducto=$juguete->nombreProducto;
         $precio=$juguete->precio;
@@ -89,75 +89,56 @@ class JugueteApiControlador extends ApiControlador{
         $id_marca=$juguete->id_marca;
         $codigo=$juguete->codigo;
         $img=$juguete->img;
-        try{
+
+       try {
             $id = $this->modelo->insertarJuguete($nombreProducto,$precio,$material,$id_marca,$codigo,$img);
-            $nuevoJuguete=$this->model->getListById($id);
+            $nuevoJuguete = $this->modelo->obtenerJuguetePorId($id);
             if ($nuevoJuguete) {
                 $this->vista->response($nuevoJuguete, 201);
             } else {
-                $this->vista->response("El juguete no pudo ser ingresado", 404);
+                $this->view->response("El item no pudo ser ingresado", 404);
             }
-        }catch(PDOException $e){//si el id de la categoria no existe o es invalido capturo error, entre otros.
-            $this->vista->response("Error al intentar ingresar el registro-$e",404);
+        } catch (PDOException $e) { //si el id de la categoria no existe o es invalido capturo error.
+            $this->view->response("Error al intentar ingresar el registro", 404);
         }
-    
     }
-
+    
     public function modificarJuguete($parametro=[]){
-        $id=$parametro[':Id'];
-        if (!empty($parametro) && is_numeric($parametro[':Id'])) {
-            $id = $parametro[':Id'];
-        $jugueteId=$this->modelo->obtenerJuguetePorId($id);
-        if($jugueteId){
-        $juguete=$this->obtenerDatos();
 
-        $jugueteId = $this->modelo->obtenerJuguetePorId($id);
-            if ($jugueteId) {
+       if (empty($parametro) && !is_numeric($parametro[':Id'])) {//control por parametros validos
+            $this->vista->response('Error Not Found', 404);
+            return;
+        }
 
-        $id_juguete=$juguete->$id_juguete;
-        $nombreProducto=$juguete->nombreProducto;
-        $precio=$juguete->precio;
-        $material=$juguete->material;
-        $id_marca=$juguete->id_marca;
-        $codigo=$juguete->codigo;
-        $img=$juguete->img;
-
-        $juguete=$this->obtenerDatos();
-        if(
-            empty($juguete->id_juguete) || empty($juguete->nombreProducto) || empty($juguete->precio) || empty($item->material) || empty($juguete->id_marca)
-            || empty($juguete->codigo) || empty($juguete->img)
-            ) {
-                $this->vista->response('faltan completar campos', 404);
+        $id = $parametro[':Id'];
+        $itemId = $this->modelo->obtenerJuguetePorId($id);
+        if ($jugueteId) {
+            $juguete = $this->obtenerDatos();
+            //control por datos incompletos
+            if (empty($juguete->idProducto) || empty($juguete->idCodigoProducto) || empty($juguete->nombreProducto) || empty($juguete->precio) || empty($juguete->marca)
+                || empty($item->imagenProducto) || empty($item->IdCategoria)) {
+                $this->view->response('faltan completar campos', 404);
                 return;
             }
-
-        $jugueteModificado= $this->modelo->editarJuguete($id_juguete, $nombreProducto, $precio, $material, $id_marca, $codigo, $img);
-        if ($jugueteModificado){
-            $this->vista->response("juguete modificado con exito",200);
-        }else{
-            $this->vista->response("no se pudo modificar juguete",404);
-        }    
-        }else{
-            $this->vista->response("no existe juguete con Id:$id",404);
-            $id_juguete=$juguete->$id_juguete;
-            $nombreProducto=$juguete->nombreProducto;
-            $precio=$juguete->precio;
-            $material=$juguete->material;
-            $id_marca=$juguete->id_marca;
-            $codigo=$juguete->codigo;
-            $img=$juguete->img;
-
+            //asignacion valores recibidos
+            $id_juguete = $juguete->id_juguete;
+            $nombreProducto = $juguete->nombreProducto;
+            $precio = $juguete->precio;
+            $material = $juguete->material;
+            $id_marca = $item->id_marca;
+            $codigo = $juguete->codigo;
+            $img = $juguete->img;
+            //control de excepciones
             try {
-                $jugueteModificado= $this->modelo->editarJuguete($id_juguete, $nombreProducto, $precio, $material, $id_marca, $codigo, $img);
-                if ($jugueteModificado){
-                    $this->vista->response("juguete modificado con exito",200);
-                }else{
-                    $this->vista->response("no se pudo modificar juguete",404);
-                }    
-                }else{
-        $this->vista->response('Error Not Found', 404);
+                $jugueteModificado = $this->modelo->editarJuguete($id_juguete,$idProducto,$nombreProducto,$precio,$material,$id_marca,$codigo,$img);
+                if ($itemUpdated) {
+                    $this->vista->response("juguete modificado con exito", 200);
+                } else {
+                    $this->vista->response("no se pudo modificar juguete", 404);
+                }
+            } catch (PDOException $e) {
+                $this->vista->response("error al intentar modificar el juguete $e", 404);
             }
         }
     }
- }
-    
+}

@@ -18,4 +18,4 @@ $router->agregarRuta('marca/:Id', 'GET', 'JugueteApiControlador', 'obtenerMarcas
 $router->agregarRuta('marca/:Id', 'DELETE', 'JugueteApiControlador', 'eliminarMarca');
 
 // rutea
-$router->route($_GET["resource"], $_SERVER['REQUEST_METHOD']);
+$router->route($_GET["recurso"], $_SERVER['REQUEST_METHOD']);
