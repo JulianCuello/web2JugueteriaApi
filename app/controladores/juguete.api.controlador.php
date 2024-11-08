@@ -14,60 +14,36 @@ class JugueteApiControlador extends ApiControlador{
     //lista completa
     public function listaJuguetes($parametro = []){
     
-        if (empty($parametro)) {
-            $juguetes = $this->modelo->obtenerJuguetes();
-            $this->vista->response($juguete,200);
-        } else if(!empty($parametro)){
-            $id=$parametro[':Id'];
-            $jugueteLista=$this->modelo->obtenerJuguetePorId($id);
-            if($jugueteLista)
-                $this->vista->response($jugueteLista,200);
-            else{
-                $this->vista->response('no se encontro juguete',404);
-            }
-         }else{
-            $this->vista->response('error not found',404);
-         }
-         if(isset($_GET['sort'])&&isset($_GET['order'])){//recibir parametros
-            $sort=$_GET['sort'];//bajo a variable
-            $order=$_GET['order'];
-            switch($sort){//controlo los casos posibles
-                case 'precio':
-                    $sort='precio';
-                    break;
-                case 'idCodigoProducto':
-                    $sort='idCodigoProducto';
-                    break;
-                default:
-                    $sort='';
-                    break;
-            }
-            if(!$order=='DESC'){
-              $order='ASC';
-            }else{
-                $order='DESC';
-            }
-            $adicional='ORDER BY '.$sort.' '.$order;
-        }else{
-            $adicional='';
-        }
-     }else{
-        $this->vista->response('error not found',404);
-     }
-        $lista = $this->modelo->obtenerJuguetes($adicional);
-        $this->vista->response($list, 200);
-    } else if (isset($params[':Id']) && is_numeric($params[':Id'])) {//valido parametros
-        $id = $params[':Id'];
-        $jugueteLista = $this->modelo->obtenerJuguetePorId($id);
-        if ($jugueteLista)
-            $this->vista->response($jugueteLista, 200);
-        else {
-            $this->vista->response("No existe juguete Id N°:$id", 404);
-        }
-    } else {
-        $this->vista->response('Error Not Found', 404);
-    }
+        $columnas = $this->modelo->obtenerColumnas();
+        //verificaciones al helper
+        $filtro = $this->ayuda->esFiltro($_GET, $columnas);
+        $valor = $this->ayuda->esValor($_GET);
+        $operacion = $this->ayuda->isOperacion($_GET);
+        $tipo = $this->ayuda->esTipo($_GET, $columns);
+        $orden = $this->ayuda->esOrden($_GET);
+        $limite = $this->ayuda->isLimit($_GET);
+        $compensar= $this->ayuda->estaCompensado($_GET);
 
+        $opciones = [ //$options almacena las variables true y se envian a la consulta donde se arma la query segun seteos
+            'filtro' => $filtro ? $_GET['filtro'] : null,
+            'valor' => $valor ? $_GET['valor'] : null,
+            'operacion' => $operacion ? $_GET['operacion'] : null,
+            'tipo' => $tipo ? $_GET['tipo'] : null,
+            'orden' => $orden ? $_GET['orden'] : null,
+            'limite' => $limite ? $_GET['limite'] : null,
+            'compensar' => $compensar ? $_GET['compensar'] : null
+        ];
+
+           try {
+            $lista = $this->modelo->mostrarJuguetes($opciones);
+            if ($lista) {
+                $this->vista->response($lista, 200);
+            } else
+                $this->vista->response('Bad Request', 400);
+        } catch (PDOException) {
+            $this->vista->response('Bad Request', 400);
+        }
+    }
         public function eliminarJuguete ($parametro=[]){
             if (!empty($parametro)){
                 $id=$parametro[':Id'];

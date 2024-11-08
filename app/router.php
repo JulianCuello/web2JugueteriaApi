@@ -6,7 +6,6 @@ require_once './app/controladores/juguete.api.controlador.php';
 
 $router= new Router();
 
-
 $router->agregarRuta('lista','GET','JugueteApiControlador','listaJuguetes');
 $router->agregarRuta('lista', 'POST', 'JugueteApiControlador', 'agregarJuguete');
 $router->agregarRuta('lista/:Id', 'PUT','JugueteApiControlador', 'modificarJugete');
