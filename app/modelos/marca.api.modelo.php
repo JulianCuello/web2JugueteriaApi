@@ -25,7 +25,7 @@ class marcaModelo extends Modelo {
         $query->execute([$id]);
         return $query->rowCount();
     }
-    function modificarMarca($id_marca, $origen, $caracteristica,$nombreMarca, $imgMarca){
+    function editarMarca($id_marca, $origen, $caracteristica,$nombreMarca, $imgMarca){
         $query = $this->db->prepare('UPDATE marca SET origen=?,caracteristica=?,nombreMarca=?,imgMarca=? WHERE id_marca=?');
         $query->execute([$origen, $caracteristica, $nombreMarca, $imgMarca]);
         return $query->rowCount();
